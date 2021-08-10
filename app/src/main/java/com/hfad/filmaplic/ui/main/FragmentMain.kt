@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.hfad.filmaplic.com.hfad.filmaplic.ui.main.MainAdapter
 import com.hfad.filmaplic.databinding.FragmentMainBinding
 
 
@@ -16,6 +17,8 @@ class FragmentMain : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     lateinit var viewModel: MainViewModel
+    private var adapter = MainAdapter()
+
     companion object {
         fun newInstance() = FragmentMain()
     }
@@ -30,6 +33,7 @@ class FragmentMain : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+       binding.recycleViewContainer.adapter = adapter
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getData().observe(viewLifecycleOwner, Observer { renewal(it) })
         viewModel.getFilms()
@@ -37,10 +41,11 @@ class FragmentMain : Fragment() {
 
     private fun renewal(appState: AppState) {
         when(appState){
-            is AppState.Success -> {
+            is AppState.SuccessList -> {
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar.make(binding.loadingLayout,"Success OK", Snackbar.LENGTH_LONG).show()
-                setData(appState.filmList)
+                setData(appState.filmListArray)
+                adapter.setFilms(appState.filmListArray)
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
@@ -48,9 +53,8 @@ class FragmentMain : Fragment() {
         }
     }
 
-    private fun setData(filmList: Film) {
-        binding.name.text = filmList.name
-        binding.description.text = filmList.description
+    private fun setData(filmList: List<Film>) {
+        binding.name.text = filmList.size.toString()
     }
 
     override fun onDestroyView() {

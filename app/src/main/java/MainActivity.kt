@@ -1,9 +1,10 @@
-package com.hfad.filmaplic.ui.main
+package com.hfad.filmaplic
 
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.hfad.filmaplic.R
+
+import com.hfad.filmaplic.ui.main.FragmentMain
 
 
 class MainActivity : AppCompatActivity() {
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null){
-          //  initFragment()
+            initFragment()
         }
     }
 
